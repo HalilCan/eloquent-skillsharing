@@ -1,0 +1,79 @@
+ Long polling
+ As long as the client makes sure it constantly has a polling request open, it will receive information from the server quickly after it becomes available. For example, if Fatma has our skill-sharing application open in her browser, that browser will have made a request for updates and will be waiting for a response to that request. When Iman submits a talk on Extreme Downhill Unicycling, the server will notice that Fatma is waiting for updates and send a response containing the new talk to her pending request. Fatma’s browser will receive the data and update the screen to show the talk.
+
+ To prevent connections from timing out (being aborted because of a lack of activity), long polling techniques usually set a maximum time for each request, after which the server will respond anyway, even though it has nothing to report, after which the client will start a new request. Periodically restarting the request also makes the technique more robust, allowing clients to recover from temporary connection failures or server problems.
+
+ A busy server that is using long polling may have thousands of waiting requests, and thus TCP connections, open. Node, which makes it easy to manage many connections without creating a separate thread of control for each one, is a good fit for such a system.
+
+ ////////////////////////////
+
+ The server will communicate with the client using JSON
+
+ ////////////////////////////
+
+  GET request to /talks returns a JSON document like this:
+
+ [{"title": "Unituning",
+   "presenter": "Jamal",
+   "summary": "Modifying your cycle for extra style",
+   "comments": []}]}
+
+ Creating a new talk is done by making a PUT request to a URL like /talks/Unituning, where the part after the second slash is the title of the talk. The PUT request’s body should contain a JSON object that has presenter and summary properties.
+
+ Since talk titles may contain spaces and other characters that may not appear normally in a URL, title strings must be encoded with the encodeURIComponent function when building up such a URL.
+
+ console.log("/talks/" + encodeURIComponent("How to Idle"));
+ // → /talks/How%20to%20Idle
+
+ A request to create a talk about idling might look something like this:
+
+ PUT /talks/How%20to%20Idle HTTP/1.1
+ Content-Type: application/json
+ Content-Length: 92
+
+ {"presenter": "Maureen",
+  "summary": "Standing still on a unicycle"}
+
+Adding a comment to a talk is done with a POST request to a URL like /talks/Unituning/comments, with a JSON body that has author and message properties.
+
+POST /talks/Unituning/comments HTTP/1.1
+Content-Type: application/json
+Content-Length: 72
+
+{"author": "Iman",
+ "message": "Will you talk about raising a cycle?"}
+
+To support long polling, GET requests to /talks may include extra headers that inform the server to delay the response if no new information is available. We’ll use a pair of headers normally intended to manage caching: ETag and If-None-Match.
+
+Servers may include an ETag (“entity tag”) header in a response. Its value is a string that identifies the current version of the resource. Clients, when they later request that resource again, may make a conditional request by including an If-None-Match header whose value holds that same string. If the resource hasn’t changed, the server will respond with status code 304, which means “not modified”, telling the client that its cached version is still current. When the tag does not match, the server responds as normal.
+
+We need something like this, where the client can tell the server which version of the list of talks it has, and the server responds only when that list has changed. But instead of immediately returning a 304 response, the server should stall the response and return only when something new is available or a given amount of time has elapsed. To distinguish long polling requests from normal conditional requests, we give them another header, Prefer: wait=90, which tells the server that the client is willing to wait up to 90 seconds for the response.
+
+The server will keep a version number that it updates every time the talks change and will use that as the ETag value. Clients can make requests like this to be notified when the talks change:
+
+GET /talks HTTP/1.1
+If-None-Match: "4"
+Prefer: wait=90
+
+(time passes)
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+ETag: "5"
+Content-Length: 295
+
+[....]
+
+The protocol described here does not do any access control. Everybody can comment, modify talks, and even delete them. (Since the Internet is full of hooligans, putting such a system online without further protection probably wouldn’t end well.)
+
+  /////////////////////////////
+
+Routing:
+
+Our server will use createServer to start an HTTP server. In the function that handles a new request, we must distinguish between the various kinds of requests (as determined by the method and the path) that we support. This can be done with a long chain of if statements, but there is a nicer way.
+
+A router is a component that helps dispatch a request to the function that can handle it. You can tell the router, for example, that PUT requests with a path that matches the regular expression /^\/talks\/([^\/]+)$/ (/talks/ followed by a talk title) can be handled by a given function. In addition, it can help extract the meaningful parts of the path (in this case the talk title), wrapped in parentheses in the regular expression, and pass them to the handler function.
+
+There are a number of good router packages on NPM, but here we’ll write one ourselves to illustrate the principle.
+
+
