@@ -58,6 +58,22 @@ class SkillShareServer {
                 "ETag": `"${this.version}"`}
         };
     };
+    waitForChanges = function(time) {
+        return new Promise(resolve => {
+            this.waiting.push(resolve);
+            setTimeout(() => {
+                if (!this.waiting.includes(resolve)) return;
+                this.waiting = this.waiting.filter(r => r != resolve);
+                resolve({status: 304});
+            }, time * 1000);
+        });
+    };
+    updated = function() {
+        this.version++;
+        let response = this.talkResponse();
+        this.waiting.forEach(resolve => resolve(response));
+        this.waiting = [];
+    };
 }
 
 /*
