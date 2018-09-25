@@ -90,5 +90,13 @@ When a request matches none of the request types defined in our router, the serv
 
 I opted for ecstatic. This isn’t the only such server on NPM, but it works well and fits our purposes. The ecstatic package exports a function that can be called with a configuration object to produce a request handler function. We use the root option to tell the server where it should look for files. The handler function accepts request and response parameters and can be passed directly to createServer to create a server that serves only files. We want to first check for requests that we should handle specially, though, so we wrap it in another function.
 
+///////////////////////////////
+
+Talks as resources
+
+The talks that have been proposed are stored in the talks property of the server, an object whose property names are the talk titles. These will be exposed as HTTP resources under /talks/[title], so we need to add handlers to our router that implement the various methods that clients can use to work with them.
+
+The handler for requests that GET a single talk must look up the talk and respond either with the talk’s JSON data or with a 404 error response.
+
 
 

@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "hcm",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ecstatic": "^3.3.0"
+  }
 }
