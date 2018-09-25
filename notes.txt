@@ -98,5 +98,7 @@ The talks that have been proposed are stored in the talks property of the server
 
 The handler for requests that GET a single talk must look up the talk and respond either with the talk’s JSON data or with a 404 error response.
 
+Deleting a talk is done by removing it from the talks object.
+
 
 

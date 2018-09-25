@@ -21,29 +21,55 @@ class SkillShareServer {
 
         let fileServer = ecstatic({root: "./public"});
         this.server = createServer((request, response) => {
-           let resolved = router.resolve(this, request);
-           if (resolved) {
-               resolved.catch(error => {
-                   if (error.status != null) return error;
-                   return {body: String(error), status: 500};
-               }).then(({body,
-                        status = 200,
-                        headers = defaultHeaders}) => {
-                  response.writeHead(status, headers);
-                  response.end(body);
-               });
-           } else {
-               fileServer(request, response);
-           }
+            let resolved = router.resolve(this, request);
+            if (resolved) {
+                resolved.catch(error => {
+                    if (error.status != null) return error;
+                    return {body: String(error), status: 500};
+                }).then(({
+                             body,
+                             status = 200,
+                             headers = defaultHeaders
+                         }) => {
+                    response.writeHead(status, headers);
+                    response.end(body);
+                });
+            } else {
+                fileServer(request, response);
+            }
         });
     }
+
     start(port) {
         this.server.listen(port);
     }
+
     stop() {
         this.server.close();
     }
 }
+
 /*
 This uses a similar convention as the file server from the previous chapter for responses—handlers return promises that resolve to objects describing the response. It wraps the server in an object that also holds its state.
  */
+
+const talkPath = /^\/talks\/([^\/]+)$/;
+router.add("GET", talkPath, async (server, title) => {
+    if (title in server.talks) {
+        return {
+            body: JSON.stringify(server.talks[title]),
+            headers: {"Content-Type": "application/json"}
+        };
+    } else {
+        return {status: 404, body: `No talk '${title}' found`};
+    }
+});
+
+router.add("DELETE", talkPath, async (server, title) => {
+    if (title in server.talks) {
+        delete server.talks[title];
+        server.updated();
+    }
+    return {status: 204};
+});
+
