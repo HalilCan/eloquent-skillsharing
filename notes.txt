@@ -76,4 +76,19 @@ A router is a component that helps dispatch a request to the function that can h
 
 There are a number of good router packages on NPM, but here we’ll write one ourselves to illustrate the principle.
 
+The module exports the Router class. A router object allows new handlers to be registered with the add method and can resolve requests with its resolve method.
+
+The latter will return a response when a handler was found, and null otherwise. It tries the routes one at a time (in the order in which they were defined) until a matching one is found.
+
+The handler functions are called with the context value (which will be the server instance in our case), match strings for any groups they defined in their regular expression, and the request object. The strings have to be URL-decoded since the raw URL may contain %20-style codes.
+
+///////////////////////////////
+
+Serving Files:
+
+When a request matches none of the request types defined in our router, the server must interpret it as a request for a file in the public directory. It would be possible to use the file server defined in Chapter 20 to serve such files, but we neither need nor want to support PUT and DELETE requests on files, and we would like to have advanced features such as support for caching. So let’s use a solid, well-tested static file server from NPM instead.
+
+I opted for ecstatic. This isn’t the only such server on NPM, but it works well and fits our purposes. The ecstatic package exports a function that can be called with a configuration object to produce a request handler function. We use the root option to tell the server where it should look for files. The handler function accepts request and response parameters and can be passed directly to createServer to create a server that serves only files. We want to first check for requests that we should handle specially, though, so we wrap it in another function.
+
+
 
