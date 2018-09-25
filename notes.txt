@@ -100,5 +100,12 @@ The handler for requests that GET a single talk must look up the talk and respon
 
 Deleting a talk is done by removing it from the talks object.
 
+To retrieve the content of a request body, we define a function called readStream, which reads all content from a readable stream and returns a promise that resolves to a string.
+
+One handler that needs to read request bodies is the PUT handler, which is used to create new talks. It has to check whether the data it was given has presenter and summary properties, which are strings. Any data coming from outside the system might be nonsense, and we don’t want to corrupt our internal data model or crash when bad requests come in.
+
+If the data looks valid, the handler stores an object that represents the new talk in the talks object, possibly overwriting an existing talk with this title, and again calls updated.
+
+///////////////////////////////////
 
 
