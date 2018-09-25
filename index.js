@@ -68,13 +68,14 @@ class SkillShareServer {
             }, time * 1000);
         });
     };
-    updated = function() {
-        this.version++;
-        let response = this.talkResponse();
-        this.waiting.forEach(resolve => resolve(response));
-        this.waiting = [];
-    };
 }
+
+SkillShareServer.prototype.updated = function() {
+    this.version++;
+    let response = this.talkResponse();
+    this.waiting.forEach(resolve => resolve(response));
+    this.waiting = [];
+};
 
 /*
 This uses a similar convention as the file server from the previous chapter for responses—handlers return promises that resolve to objects describing the response. It wraps the server in an object that also holds its state.
