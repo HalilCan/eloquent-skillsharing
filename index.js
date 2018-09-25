@@ -47,6 +47,17 @@ class SkillShareServer {
     stop() {
         this.server.close();
     }
+    talkResponse = function() {
+        let talks = [];
+        for (let title of Object.keys(this.talks)) {
+            talks.push(this.talks[title]);
+        }
+        return {
+            body: JSON.stringify(talks),
+            headers: {"Content-Type": "application/json",
+                "ETag": `"${this.version}"`}
+        };
+    };
 }
 
 /*
@@ -139,3 +150,18 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
             return {status: 404, body: `No talk '${title}' found`};
         }
     });
+
+router.add("GET", /^\/talks$/, async (server, request) => {
+    let tag = /"(.*)"/.exec(request.headers["if-none-match"]);
+    let wait = /\bwait=(\d+)/.exec(request.headers["prefer"]);
+    if (!tag || tag[1] != server.version) {
+        return server.talkResponse();
+    } else if (!wait) {
+        return {status: 304};
+    } else {
+        return server.waitForChanges(Number(wait[1]));
+    }
+});
+/*
+If no tag was given or a tag was given that doesn’t match the server’s current version, the handler responds with the list of talks. If the request is conditional and the talks did not change, we consult the Prefer header to see whether we should delay the response or respond right away.
+ */
