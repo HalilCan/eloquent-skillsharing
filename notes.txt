@@ -119,3 +119,10 @@ The handler itself needs to look at the request headers to see whether If-None-M
 If no tag was given or a tag was given that doesn’t match the server’s current version, the handler responds with the list of talks. If the request is conditional and the talks did not change, we consult the Prefer header to see whether we should delay the response or respond right away.
 
 Callback functions for delayed requests are stored in the server’s waiting array so that they can be notified when something happens. The waitForChanges method also immediately sets a timer to respond with a 304 status when the request has waited long enough.
+
+That concludes the server code. If we create an instance of SkillShareServer and start it on port 8000, the resulting HTTP server serves files from the public subdirectory alongside a talk-managing interface under the /talks URL.
+-> new SkillShareServer(Object.create(null)).start(8000);
+
+//////////////////////////////////////////////////////
+
+
