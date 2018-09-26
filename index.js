@@ -22,21 +22,8 @@ module.exports.init = function () {
 
 class SkillShareServer {
     constructor(talks) {
-        if (talks == null) {
-            this.talks = this.loadFromDisk((err, data) => {
-                if (err) {
-                    if (err.code === "ENOENT") {
-                        console.log("No talks file found");
-                        return Object.create(null);
-                    } else {
-                        throw(err);
-                    }
-                }
-                return JSON.parse(data)
-            });
-        } else {
-            this.talks = talks;
-        }
+        this.talks = JSON.parse(this.loadFromDiskSync());
+        console.log(this.talks);
         this.version = 0;
         this.waiting = [];
 
@@ -68,6 +55,24 @@ class SkillShareServer {
     async loadFromDisk(callback) {
         return fs.readFile("./talks/talks.json", callback);
     };
+
+    loadFromDiskSync() {
+        return fs.readFileSync("./talks/talks.json");
+    };
+
+    async readTalks() {
+        return await (this.loadFromDisk((err, data) => {
+            if (err) {
+                if (err.code === "ENOENT") {
+                    console.log("No talks file found");
+                    return Object.create(null);
+                } else {
+                    throw(err);
+                }
+            }
+            return JSON.parse(data);
+        }));
+    }
 
     start(port) {
         this.server.listen(port);
