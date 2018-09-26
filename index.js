@@ -23,7 +23,6 @@ module.exports.init = function () {
 class SkillShareServer {
     constructor(talks) {
         this.talks = JSON.parse(this.loadFromDiskSync());
-        console.log(this.talks);
         this.version = 0;
         this.waiting = [];
 
