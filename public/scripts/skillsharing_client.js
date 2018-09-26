@@ -22,6 +22,31 @@ class SkillShareApp {
     }
 }
 
+//When the talks change, this component redraws all of them. This is simple but also wasteful. We’ll get back to that in the exercises.
+
+//We can start the application like this:
+function runApp() {
+    let user = localStorage.getItem("userName") || "Anon";
+    let state, app;
+    function dispatch(action) {
+        state = handleAction(state, action);
+        app.syncState(state);
+    }
+
+    pollTalks(talks => {
+        if (!app) {
+            state = {user, talks};
+            app = new SkillShareApp(state, dispatch);
+            document.body.appendChild(app.dom);
+        } else {
+            dispatch({type: "setTalks", talks});
+        }
+    }).catch(reportError);
+}
+
+runApp();
+///////////////////////////////////////
+
 
 function handleAction(state, action) {
     if (action.type == "setUser") {
