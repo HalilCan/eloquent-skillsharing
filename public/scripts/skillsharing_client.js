@@ -2,7 +2,6 @@ class SkillShareApp {
     constructor(state, dispatch) {
         this.dispatch = dispatch;
         this.talkDOM = elt("div", {className: "talks"});
-        this.commentFields = {};
         this.dom = elt("div", null,
             renderUserField(state.user, dispatch),
             this.talkDOM,
@@ -12,11 +11,11 @@ class SkillShareApp {
     }
 
     syncState(state) {
-        if (state.talks !== this.talks) {
+        if (state.talks != this.talks) {
             this.talkDOM.textContent = "";
             for (let talk of state.talks) {
                 this.talkDOM.appendChild(
-                    renderTalk(talk, this.dispatch, this.getCommentInput(talk.title)));
+                    renderTalk(talk, this.dispatch));
             }
             this.talks = state.talks;
         }
@@ -26,10 +25,11 @@ class SkillShareApp {
         Given title of state.talks talk, returns talkDOM comment field
      */
     getCommentInput(title) {
-        console.log(title);
+        if (this.talkDOM == {}) return "";
         for (let talkObject of this.talkDOM.childNodes) {
-            console.log(talkObject.querySelector("h2").value);
-            if (talkObject.querySelector("h2").value === title) {
+            console.log(`${title} == ${talkObject.querySelector("h2").innerText.trim()} is ${talkObject.querySelector("h2").innerText.trim() == title}`);
+            if (talkObject.querySelector("h2").innerText.value == title) {
+                console.log(`caught at: ${title}`);
                 return talkObject.querySelector("input").innerText;
             }
         }
@@ -108,7 +108,7 @@ function talkURL(title) {
 }
 
 function reportError(error) {
-    alert(String(error));
+    alert(String());
 }
 
 function renderUserField(name, dispatch) {
@@ -138,12 +138,14 @@ function elt(type, props, ...children) {
 function renderTalk(talk, dispatch, typedComment) {
     return elt(
         "section", {className: "talk"},
-        elt("h2", null, talk.title, " ", elt("button", {
-            type: "button",
-            onclick() {
-                dispatch({type: "deleteTalk", talk: talk.title});
-            }
-        }, "Delete")),
+        elt("section", {className: "talkTitle"},
+            elt("h2", null, talk.title, " "),
+            elt("button", {
+                type: "button",
+                onclick() {
+                    dispatch({type: "deleteTalk", talk: talk.title});
+                }
+            }, "Delete")),
         elt("div", null, "by ",
             elt("strong", null, talk.presenter)),
         elt("p", null, talk.summary),
