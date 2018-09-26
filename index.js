@@ -22,9 +22,21 @@ module.exports.init = function () {
 
 class SkillShareServer {
     constructor(talks) {
-        this.talks = this.getTalks((err, data) => {
-            return data;
-        });
+        if (talks == null) {
+            this.talks = this.loadFromDisk((err, data) => {
+                if (err) {
+                    if (err.code === "ENOENT") {
+                        console.log("No talks file found");
+                        return Object.create(null);
+                    } else {
+                        throw(err);
+                    }
+                }
+                return JSON.parse(data)
+            });
+        } else {
+            this.talks = talks;
+        }
         this.version = 0;
         this.waiting = [];
 
@@ -65,22 +77,6 @@ class SkillShareServer {
         this.server.close();
     }
 }
-
-SkillShareServer.prototype.getTalks = async function () {
-    let talkList = this.loadFromDisk(function (err, data) {
-        if (err) {
-            if (err.code == "ENOENT") {
-                console.log("No talks file found");
-                return Object.create(null);
-            } else {
-                throw(err);
-            }
-        }
-        return JSON.parse(data);
-    });
-    return talkList;
-};
-
 
 SkillShareServer.prototype.talkResponse = function () {
     let talks = [];
