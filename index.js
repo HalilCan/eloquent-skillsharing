@@ -55,28 +55,30 @@ class SkillShareServer {
         return fs.readFile("./talks/talks.json", callback);
     };
 
+    async start(port) {
+        this.server.listen(port);
+        let setTalks = ((callback) => {
+            this.talks = this.loadFromDisk(function (err, data) {
+                if (err) {
+                    if (err.code == "ENOENT") {
+                        console.log("No talks file found");
+                        return Object.create(null);
+                    } else {
+                        throw(err);
+                    }
+                }
+                return JSON.parse(data);
+            }).then(callback());
+        });
+        setTalks(() => {}).then(this.updated());
+    };
+
     stop() {
         this.server.close();
     }
 }
 
-SkillShareServer.prototype.start = function (port) {
-    this.server.listen(port);
-    let setTalks = ((callback) => {
-        this.talks = this.loadFromDisk(function (err, data) {
-            if (err) {
-                if (err.code == "ENOENT") {
-                    console.log("No talks file found");
-                    return Object.create(null);
-                } else {
-                    throw(err);
-                }
-            }
-            return JSON.parse(data);
-        }).then(callback());
-    });
-    setTalks(this.updated).bind(SkillShareServer.prototype);
-};
+
 
 SkillShareServer.prototype.talkResponse = function () {
     let talks = [];
