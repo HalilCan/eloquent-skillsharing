@@ -111,6 +111,7 @@ function handleAction(state, action) {
         fetchOK(talkURL(action.talk), {method: "DELETE"})
             .catch(reportError);
     } else if (action.type == "newComment") {
+        let talk = action.talk;
         fetchOK(talkURL(action.talk) + "/comments", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -119,9 +120,10 @@ function handleAction(state, action) {
                 message: action.message
             })
         }).catch(reportError);
+        setActiveComment(state, talk, "");
     } else if (action.type == "commentFieldChange") {
-        let title = action.title;
-        setActiveComment(state, title, action.message);
+        let talk = action.title;
+        setActiveComment(state, talk, action.message);
     }
     return state;
 }
