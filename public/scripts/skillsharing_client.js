@@ -14,6 +14,7 @@ class SkillShareApp {
         if (state.talks != this.talks) {
             this.talkDOM.textContent = "";
             for (let talk of state.talks) {
+                console.log(getActiveComment(state, talk.title));
                 this.talkDOM.appendChild(
                     renderTalk(talk, this.dispatch, getActiveComment(state, talk.title)));
             }
@@ -52,7 +53,6 @@ function getActiveComment(state, title) {
 }
 
 function setActiveComment(state, title, comment) {
-    console.log(title, comment);
     for (let talk of state.talks) {
         if (talk.title.trim() === title.trim()) {
             talk.activeComment = comment;
