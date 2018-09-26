@@ -13,6 +13,10 @@ const ecstatic = require("ecstatic");
 const router = new Router();
 const defaultHeaders = {"Content-Type": "text/plain"};
 
+module.exports.init = function() {
+
+};
+
 class SkillShareServer {
     constructor(talks) {
         this.talks = talks;

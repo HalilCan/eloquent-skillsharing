@@ -4,7 +4,8 @@
   "description": "Eloquent Javascript final project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -e \"require('./index').init()\""
   },
   "author": "hcm",
   "license": "ISC",
