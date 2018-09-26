@@ -92,6 +92,9 @@ function handleAction(state, action) {
                 message: action.message
             })
         }).catch(reportError);
+    } else if (action.type == "commentFieldChange") {
+        let title = action.title;
+        state.title.activeComment = action.message;
     }
     return state;
 }
@@ -151,18 +154,27 @@ function renderTalk(talk, dispatch, typedComment) {
         elt("p", null, talk.summary),
         ...talk.comments.map(renderComment),
         elt("form", {
-                onsubmit(event) {
-                    event.preventDefault();
+            onsubmit(event) {
+                event.preventDefault();
+                let form = event.target;
+                dispatch({
+                    type: "newComment",
+                    talk: talk.title,
+                    message: form.elements.comment.value
+                });
+                form.reset();
+            }
+        }, elt("input", {
+                type: "text", name: "comment", value: typedComment, onchange: ((event) => {
                     let form = event.target;
                     dispatch({
-                        type: "newComment",
+                        type: "commentFieldChange",
                         talk: talk.title,
                         message: form.elements.comment.value
                     });
-                    form.reset();
-                }
-            }, elt("input", {type: "text", name: "comment", value: typedComment}), " ",
-            elt("button", {type: "submit"}, "Add comment")));
+                })
+            }, " ",
+            elt("button", {type: "submit"}, "Add comment"))));
 }
 
 function renderComment(comment) {
