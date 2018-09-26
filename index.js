@@ -46,6 +46,7 @@ class SkillShareServer {
             }
         });
     }
+
     async saveToDisk(callback) {
         fs.writeFile("./talks/talks.json", JSON.stringify(this.talks), callback);
     };
@@ -54,8 +55,14 @@ class SkillShareServer {
         return fs.readFile("./talks/talks.json", callback);
     };
 
-    start(port) {
-        this.server.listen(port);
+    stop() {
+        this.server.close();
+    }
+}
+
+SkillShareServer.prototype.start = function (port) {
+    this.server.listen(port);
+    let setTalks = ((callback) => {
         this.talks = this.loadFromDisk(function (err, data) {
             if (err) {
                 if (err.code == "ENOENT") {
@@ -67,12 +74,11 @@ class SkillShareServer {
             }
             return JSON.parse(data);
         });
-    }
+        callback();
+    });
+    setTalks(this.updated())
 
-    stop() {
-        this.server.close();
-    }
-}
+};
 
 SkillShareServer.prototype.talkResponse = function () {
     let talks = [];
