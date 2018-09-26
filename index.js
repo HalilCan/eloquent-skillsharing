@@ -46,8 +46,8 @@ class SkillShareServer {
             }
         });
     }
-    async saveToDisk() {
-        fs.writeFile(talkPath + "talks.json", JSON.stringify(this.talks));
+    async saveToDisk(callback) {
+        fs.writeFile(talkPath + "talks.json", JSON.stringify(this.talks), callback);
     };
 
     async loadFromDisk(callback) {
@@ -58,7 +58,12 @@ class SkillShareServer {
         this.server.listen(port);
         this.talks = this.loadFromDisk(function (err, data) {
             if (err) {
-                throw(err);
+                if (err.code == "ENOENT") {
+                    console.log("No talks file found");
+                    return Object.create(null);
+                } else {
+                    throw(err);
+                }
             }
             return data;
         });
@@ -99,7 +104,10 @@ SkillShareServer.prototype.updated = function () {
     let response = this.talkResponse();
     this.waiting.forEach(resolve => resolve(response));
     this.waiting = [];
-    this.saveToDisk();
+    this.saveToDisk((err) => {
+        if (err) throw err;
+        console.log("Talks file has been saved!");
+    });
 };
 
 /*
