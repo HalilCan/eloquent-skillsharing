@@ -9,6 +9,7 @@
 const {createServer} = require("http");
 const Router = require("./router");
 const ecstatic = require("ecstatic");
+const fs = require("fs");
 
 const router = new Router();
 const defaultHeaders = {"Content-Type": "text/plain"};
@@ -85,6 +86,14 @@ SkillShareServer.prototype.updated = function () {
     let response = this.talkResponse();
     this.waiting.forEach(resolve => resolve(response));
     this.waiting = [];
+};
+
+SkillShareServer.prototype.saveToDisk = function () {
+    fs.writeFile(talkPath + "talks.json", JSON.stringify(this.talks));
+};
+
+SkillShareServer.prototype.loadFromDisk = function () {
+    return fs.readFile(talkPath + "talks.json");
 };
 
 /*
