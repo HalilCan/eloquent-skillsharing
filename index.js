@@ -14,7 +14,9 @@ const router = new Router();
 const defaultHeaders = {"Content-Type": "text/plain"};
 
 module.exports.init = function() {
-
+    let port = process.env.PORT || 8000;
+    let sss = SkillShareServer(Object.create(null));
+    sss.start(port);
 };
 
 class SkillShareServer {
