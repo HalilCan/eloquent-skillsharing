@@ -192,12 +192,12 @@ function renderTalk(talk, dispatch, typedComment) {
                     let form = event.target;
                     dispatch({
                         type: "commentFieldChange",
-                        talk: talk.title,
+                        title: talk.title,
                         message: form.value
                     });
                 })
-            }, " ",
-            elt("button", {type: "submit"}, "Add comment"))));
+            }, " "),
+            elt("button", {type: "submit"}, "Add comment")));
 }
 
 function renderComment(comment) {
