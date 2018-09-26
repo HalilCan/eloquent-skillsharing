@@ -11,13 +11,22 @@ class SkillShareApp {
     }
 
     syncState(state) {
-        if (state.talks != this.talks) {
+        if (state.talks !== this.talks) {
+            let tempDOM = this.talkDOM;
             this.talkDOM.textContent = "";
-            for (let talk of state.talks) {
-                this.talkDOM.appendChild(
-                    renderTalk(talk, this.dispatch));
+            console.log(tempDOM);
+            for (let i = 0; i < state.talks.length; i++) {
+                if (tempDOM !== undefined && tempDOM.childNodes[i] !== undefined) {
+                    console.log(tempDOM.childNodes[i].querySelector("input").textContent);
+                    this.talkDOM.appendChild(
+                        renderTalk(state.talks[i], this.dispatch, tempDOM.childNodes[i].querySelector("input").textContent));
+                } else {
+                    this.talkDOM.appendChild(
+                        renderTalk(state.talks[i], this.dispatch, ""));
+                }
             }
             this.talks = state.talks;
+            //for (let talk of state.talks) {
         }
     }
 }
@@ -28,6 +37,7 @@ class SkillShareApp {
 function runApp() {
     let user = localStorage.getItem("userName") || "Anon";
     let state, app;
+
     function dispatch(action) {
         state = handleAction(state, action);
         app.syncState(state);
@@ -45,6 +55,7 @@ function runApp() {
 }
 
 runApp();
+
 ///////////////////////////////////////
 
 
@@ -118,7 +129,7 @@ function elt(type, props, ...children) {
     return dom;
 }
 
-function renderTalk(talk, dispatch) {
+function renderTalk(talk, dispatch, typedComment) {
     return elt(
         "section", {className: "talk"},
         elt("h2", null, talk.title, " ", elt("button", {
@@ -142,7 +153,7 @@ function renderTalk(talk, dispatch) {
                     });
                     form.reset();
                 }
-            }, elt("input", {type: "text", name: "comment"}), " ",
+            }, elt("input", {type: "text", name: "comment", value: typedComment}), " ",
             elt("button", {type: "submit"}, "Add comment")));
 }
 
