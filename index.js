@@ -13,7 +13,7 @@ const ecstatic = require("ecstatic");
 const router = new Router();
 const defaultHeaders = {"Content-Type": "text/plain"};
 
-module.exports.init = function() {
+module.exports.init = function () {
     let port = process.env.PORT || 8000;
     let sss = SkillShareServer(Object.create(null));
     sss.start(port);
@@ -53,30 +53,34 @@ class SkillShareServer {
     stop() {
         this.server.close();
     }
-    talkResponse = function() {
-        let talks = [];
-        for (let title of Object.keys(this.talks)) {
-            talks.push(this.talks[title]);
-        }
-        return {
-            body: JSON.stringify(talks),
-            headers: {"Content-Type": "application/json",
-                "ETag": `"${this.version}"`}
-        };
-    };
-    waitForChanges = function(time) {
-        return new Promise(resolve => {
-            this.waiting.push(resolve);
-            setTimeout(() => {
-                if (!this.waiting.includes(resolve)) return;
-                this.waiting = this.waiting.filter(r => r != resolve);
-                resolve({status: 304});
-            }, time * 1000);
-        });
-    };
 }
 
-SkillShareServer.prototype.updated = function() {
+SkillShareServer.prototype.talkResponse = function () {
+    let talks = [];
+    for (let title of Object.keys(this.talks)) {
+        talks.push(this.talks[title]);
+    }
+    return {
+        body: JSON.stringify(talks),
+        headers: {
+            "Content-Type": "application/json",
+            "ETag": `"${this.version}"`
+        }
+    };
+};
+
+SkillShareServer.prototype.waitForChanges = function (time) {
+    return new Promise(resolve => {
+        this.waiting.push(resolve);
+        setTimeout(() => {
+            if (!this.waiting.includes(resolve)) return;
+            this.waiting = this.waiting.filter(r => r != resolve);
+            resolve({status: 304});
+        }, time * 1000);
+    });
+};
+
+SkillShareServer.prototype.updated = function () {
     this.version++;
     let response = this.talkResponse();
     this.waiting.forEach(resolve => resolve(response));
