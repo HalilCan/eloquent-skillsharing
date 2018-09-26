@@ -39,3 +39,59 @@ function fetchOK(url, options) {
 function talkURL(title) {
     return "talks/" + encodeURIComponent(title);
 }
+
+function reportError(error) {
+    alert(String(error));
+}
+
+function renderUserField(name, dispatch) {
+    return elt("label", {}, "Your name: ", elt("input", {
+        type: "text",
+        value: name,
+        onchange(event) {
+            dispatch({type: "setUser", user: event.target.value});
+        }
+    }));
+}
+
+function elt(type, props, ...children) {
+    //create the dom elt
+    let dom = document.createElement(type);
+    //assign properties
+    if (props) Object.assign(dom, props);
+    //append all the children
+    for (let child of children) {
+        if (typeof child != `string`) dom.appendChild(child);
+        else dom.appendChild(document.createTextNode(child));
+    }
+    //return the element
+    return dom;
+}
+
+function renderTalk(talk, dispatch) {
+    return elt(
+        "section", {className: "talk"},
+        elt("h2", null, talk.title, " ", elt("button", {
+            type: "button",
+            onclick() {
+                dispatch({type: "deleteTalk", talk: talk.title});
+            }
+        }, "Delete")),
+        elt("div", null, "by ",
+            elt("strong", null, talk.presenter)),
+        elt("p", null, talk.summary),
+        ...talk.comments.map(renderComment),
+        elt("form", {
+                onsubmit(event) {
+                    event.preventDefault();
+                    let form = event.target;
+                    dispatch({type: "newComment",
+                        talk: talk.title,
+                        message: form.elements.comment.value});
+                    form.reset();
+                }
+            }, elt("input", {type: "text", name: "comment"}), " ",
+            elt("button", {type: "submit"}, "Add comment")));
+}
+
+

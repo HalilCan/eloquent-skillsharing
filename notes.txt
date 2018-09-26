@@ -135,4 +135,8 @@ We’ll store the user’s name in localStorage so that it can be restored when 
 
 The actions that need to involve the server make network requests, using fetch, to the HTTP interface described earlier. We use a wrapper function, fetchOK, which makes sure the returned promise is rejected when the server returns an error code.
 
+Rendering components
+
+We’ll use an approach similar to the one we saw in Chapter 19, splitting the application into components. But since some of the components either never need to update or are always fully redrawn when updated, we’ll define those not as classes but as functions that directly return a DOM node. For example, here is a component that shows the field where the user can enter their name:
+
 
