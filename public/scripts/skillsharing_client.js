@@ -2,6 +2,7 @@ class SkillShareApp {
     constructor(state, dispatch) {
         this.dispatch = dispatch;
         this.talkDOM = elt("div", {className: "talks"});
+        this.commentFields = {};
         this.dom = elt("div", null,
             renderUserField(state.user, dispatch),
             this.talkDOM,
@@ -12,21 +13,12 @@ class SkillShareApp {
 
     syncState(state) {
         if (state.talks !== this.talks) {
-            let tempDOM = this.talkDOM;
             this.talkDOM.textContent = "";
-            console.log(tempDOM);
-            for (let i = 0; i < state.talks.length; i++) {
-                if (tempDOM !== undefined && tempDOM.childNodes[i] !== undefined) {
-                    console.log(tempDOM.childNodes[i].querySelector("input").textContent);
-                    this.talkDOM.appendChild(
-                        renderTalk(state.talks[i], this.dispatch, tempDOM.childNodes[i].querySelector("input").textContent));
-                } else {
-                    this.talkDOM.appendChild(
-                        renderTalk(state.talks[i], this.dispatch, ""));
-                }
+            for (let talk of state.talks) {
+                this.talkDOM.appendChild(
+                    renderTalk(talk, this.dispatch));
             }
             this.talks = state.talks;
-            //for (let talk of state.talks) {
         }
     }
 }
