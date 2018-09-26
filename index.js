@@ -65,7 +65,7 @@ class SkillShareServer {
                     throw(err);
                 }
             }
-            return data;
+            return JSON.parse(data);
         });
     }
 
