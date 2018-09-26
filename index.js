@@ -73,11 +73,9 @@ SkillShareServer.prototype.start = function (port) {
                 }
             }
             return JSON.parse(data);
-        });
-        callback();
+        }).then(callback());
     });
-    setTalks(this.updated())
-
+    setTalks(this.updated).bind(SkillShareServer.prototype);
 };
 
 SkillShareServer.prototype.talkResponse = function () {
