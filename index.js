@@ -15,7 +15,7 @@ const defaultHeaders = {"Content-Type": "text/plain"};
 
 module.exports.init = function () {
     let port = process.env.PORT || 8000;
-    let sss = SkillShareServer(Object.create(null));
+    let sss = new SkillShareServer(Object.create(null));
     sss.start(port);
 };
 

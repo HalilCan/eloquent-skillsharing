@@ -1,6 +1,6 @@
 class SkillShareApp {
     constructor(state, dispatch) {
-        this.dispatch = dispath;
+        this.dispatch = dispatch;
         this.talkDOM = elt("div", {className: "talks"});
         this.dom = elt("div", null,
             renderUserField(state.user, dispatch),

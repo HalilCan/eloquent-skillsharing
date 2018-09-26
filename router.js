@@ -22,6 +22,6 @@ class Router {
             return handler(context, ...urlParts, request);
         }
     }
-};
+}
 
-module.exports.Router = Router;
+module.exports = Router;
