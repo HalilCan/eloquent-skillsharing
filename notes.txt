@@ -125,4 +125,14 @@ That concludes the server code. If we create an instance of SkillShareServer and
 
 //////////////////////////////////////////////////////
 
+Actions
+
+The application state consists of the list of talks and the name of the user, and we’ll store it in a {talks, user} object. We don’t allow the user interface to directly manipulate the state or send off HTTP requests. Rather, it may emit actions that describe what the user is trying to do.
+
+The handleAction function takes such an action and makes it happen. Because our state updates are so simple, state changes are handled in the same function.
+
+We’ll store the user’s name in localStorage so that it can be restored when the page is loaded.
+
+The actions that need to involve the server make network requests, using fetch, to the HTTP interface described earlier. We use a wrapper function, fetchOK, which makes sure the returned promise is rejected when the server returns an error code.
+
 
