@@ -144,3 +144,17 @@ The "submit" event handler calls form.reset to clear the form’s content after 
 When creating moderately complex pieces of DOM, this style of programming starts to look rather messy. There’s a widely used (non-standard) JavaScript extension called JSX that lets you write HTML directly in your scripts, which can make such code prettier (depending on what you consider pretty). Before you can actually run such code, you have to run a program on your script to convert the pseudo-HTML into JavaScript function calls much like the ones we use here.
 
 Comments are simpler to render.
+
+Polling
+
+To start the app we need the current list of talks. Since the initial load is closely related to the long polling process—the ETag from the load must be used when polling—we’ll write a function that keeps polling the server for /talks and calls a callback function when a new set of talks is available.
+
+This is an async function so that looping and waiting for the request is easier. It runs an infinite loop that, on each iteration, retrieves the list of talks—either normally or, if this isn’t the first request, with the headers included that make it a long polling request.
+
+When a request fails, the function waits a moment and then tries again. This way, if your network connection goes away for a while and then comes back, the application can recover and continue updating. The promise resolved via setTimeout is a way to force the async function to wait.
+
+When the server gives back a 304 response, that means a long polling request timed out, so the function should just immediately start the next request. If the response is a normal 200 response, its body is read as JSON and passed to the callback, and its ETag header value is stored for the next iteration.
+
+The application
+
+The following component (SkillShareApp) ties the whole user interface together:
