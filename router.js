@@ -3,7 +3,7 @@
  */
 const {parse} = require('url');
 
-let Router = class {
+class Router {
     constructor() {
         this.routes = [];
     }
