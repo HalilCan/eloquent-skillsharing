@@ -47,11 +47,11 @@ class SkillShareServer {
         });
     }
     async saveToDisk(callback) {
-        fs.writeFile(talkPath + "talks.json", JSON.stringify(this.talks), callback);
+        fs.writeFile("./talks/talks.json", JSON.stringify(this.talks), callback);
     };
 
     async loadFromDisk(callback) {
-        return fs.readFile(talkPath + "talks.json", callback);
+        return fs.readFile("./talks/talks.json", callback);
     };
 
     start(port) {
