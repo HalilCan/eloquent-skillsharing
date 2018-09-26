@@ -15,7 +15,7 @@ class SkillShareApp {
             this.talkDOM.textContent = "";
             for (let talk of state.talks) {
                 this.talkDOM.appendChild(
-                    renderTalk(talk, this.dispatch));
+                    renderTalk(talk, this.dispatch, getActiveComment(state, talk.title)));
             }
             this.talks = state.talks;
         }
@@ -38,6 +38,29 @@ class SkillShareApp {
 }
 
 //When the talks change, this component redraws all of them. This is simple but also wasteful. We’ll get back to that in the exercises.
+
+
+function getActiveComment(state, title) {
+    for (let talk of state.talks) {
+        if (talk.title.trim() === title.trim()) {
+            if (talk.activeComment) {
+                return talk.activeComment;
+            }
+        }
+    }
+    return "";
+}
+
+function setActiveComment(state, title, comment) {
+    console.log(title, comment);
+    for (let talk of state.talks) {
+        if (talk.title.trim() === title.trim()) {
+            talk.activeComment = comment;
+            return;
+        }
+    }
+    return -1;
+}
 
 //We can start the application like this:
 function runApp() {
@@ -94,7 +117,7 @@ function handleAction(state, action) {
         }).catch(reportError);
     } else if (action.type == "commentFieldChange") {
         let title = action.title;
-        state.title.activeComment = action.message;
+        setActiveComment(state, title, action.message);
     }
     return state;
 }
@@ -165,12 +188,12 @@ function renderTalk(talk, dispatch, typedComment) {
                 form.reset();
             }
         }, elt("input", {
-                type: "text", name: "comment", value: typedComment, onchange: ((event) => {
+                type: "text", name: "comment", value: typedComment, onkeyup: ((event) => {
                     let form = event.target;
                     dispatch({
                         type: "commentFieldChange",
                         talk: talk.title,
-                        message: form.elements.comment.value
+                        message: form.value
                     });
                 })
             }, " ",
