@@ -22,7 +22,9 @@ module.exports.init = function () {
 
 class SkillShareServer {
     constructor(talks) {
-        this.talks = talks;
+        this.talks = this.getTalks((err, data) => {
+            return data;
+        });
         this.version = 0;
         this.waiting = [];
 
@@ -55,22 +57,8 @@ class SkillShareServer {
         return fs.readFile("./talks/talks.json", callback);
     };
 
-    async start(port) {
+    start(port) {
         this.server.listen(port);
-        let setTalks = ((callback) => {
-            this.talks = this.loadFromDisk(function (err, data) {
-                if (err) {
-                    if (err.code == "ENOENT") {
-                        console.log("No talks file found");
-                        return Object.create(null);
-                    } else {
-                        throw(err);
-                    }
-                }
-                return JSON.parse(data);
-            }).then(callback());
-        });
-        setTalks(() => {}).then(this.updated());
     };
 
     stop() {
@@ -78,6 +66,20 @@ class SkillShareServer {
     }
 }
 
+SkillShareServer.prototype.getTalks = async function () {
+    let talkList = this.loadFromDisk(function (err, data) {
+        if (err) {
+            if (err.code == "ENOENT") {
+                console.log("No talks file found");
+                return Object.create(null);
+            } else {
+                throw(err);
+            }
+        }
+        return JSON.parse(data);
+    });
+    return talkList;
+};
 
 
 SkillShareServer.prototype.talkResponse = function () {
