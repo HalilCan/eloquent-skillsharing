@@ -14,9 +14,13 @@ class SkillShareApp {
         if (state.talks != this.talks) {
             this.talkDOM.textContent = "";
             for (let talk of state.talks) {
-                console.log(getActiveComment(state, talk.title));
-                this.talkDOM.appendChild(
-                    renderTalk(talk, this.dispatch, getActiveComment(state, talk.title)));
+                if (this.talks) {
+                    this.talkDOM.appendChild(
+                        renderTalk(talk, this.dispatch, getActiveComment(this.talks, talk.title)));
+                } else {
+                    this.talkDOM.appendChild(
+                        renderTalk(talk, this.dispatch, getActiveComment(state.talks, talk.title)));
+                }
             }
             this.talks = state.talks;
         }
@@ -41,8 +45,8 @@ class SkillShareApp {
 //When the talks change, this component redraws all of them. This is simple but also wasteful. We’ll get back to that in the exercises.
 
 
-function getActiveComment(state, title) {
-    for (let talk of state.talks) {
+function getActiveComment(talks, title) {
+    for (let talk of talks) {
         if (talk.title.trim() === title.trim()) {
             if (talk.activeComment) {
                 return talk.activeComment;
