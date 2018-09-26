@@ -16,10 +16,24 @@ class SkillShareApp {
             this.talkDOM.textContent = "";
             for (let talk of state.talks) {
                 this.talkDOM.appendChild(
-                    renderTalk(talk, this.dispatch));
+                    renderTalk(talk, this.dispatch, this.getCommentInput(talk.title)));
             }
             this.talks = state.talks;
         }
+    }
+
+    /* NOTE
+        Given title of state.talks talk, returns talkDOM comment field
+     */
+    getCommentInput(title) {
+        console.log(title);
+        for (let talkObject of this.talkDOM.childNodes) {
+            console.log(talkObject.querySelector("h2").value);
+            if (talkObject.querySelector("h2").value === title) {
+                return talkObject.querySelector("input").innerText;
+            }
+        }
+        return "";
     }
 }
 
