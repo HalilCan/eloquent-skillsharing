@@ -144,15 +144,16 @@ function reportError(error) {
 }
 
 function renderUserField(name, dispatch) {
-    return elt("label", {
-        class: "name-field"
+    return elt("section", {
+        className: "name-field",
+    }, elt("label", {
     }, "Your name: ", elt("input", {
         type: "text",
         value: name,
         onchange(event) {
             dispatch({type: "setUser", user: event.target.value});
         }
-    }));
+    })));
 }
 
 function elt(type, props, ...children) {

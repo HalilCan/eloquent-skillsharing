@@ -30,17 +30,15 @@ h1 {
     border-bottom: 1px solid #414141;
 }
 
+
 .name-field {
     text-align: right;
-    float: right;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
 }
 
-body label input {
+.name-field label input {
     float: right;
     width: 100px;
     margin-top: -5px;
-}
-
-body label {
-    border-bottom: 1px solid black;
 }
