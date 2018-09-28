@@ -17,6 +17,10 @@ body {
     */
 }
 
+.page-header {
+    background-color: #d0eaf5;
+}
+
 .talk {
     margin-bottom: 10px;
     border: 1px solid transparent;
