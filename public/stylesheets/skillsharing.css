@@ -26,5 +26,6 @@ h1 {
 
 .talk p:first-of-type {
     margin-bottom: 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #414141;
 }
