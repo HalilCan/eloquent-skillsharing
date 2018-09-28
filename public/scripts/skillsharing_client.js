@@ -146,8 +146,7 @@ function reportError(error) {
 function renderUserField(name, dispatch) {
     return elt("section", {
         className: "name-field",
-    }, elt("label", {
-    }, "Your name: ", elt("input", {
+    }, elt("label", {}, "Your name: ", elt("input", {
         type: "text",
         value: name,
         onchange(event) {
@@ -173,7 +172,7 @@ function elt(type, props, ...children) {
 function renderTalk(talk, dispatch, typedComment) {
     return elt(
         "section", {className: "talk"},
-        elt("section", {className: "talkTitle"},
+        elt("section", {className: "talkHeader"}, elt("section", {className: "talkTitle"},
             elt("h2", null, talk.title, " "),
             elt("button", {
                 type: "button",
@@ -181,8 +180,8 @@ function renderTalk(talk, dispatch, typedComment) {
                     dispatch({type: "deleteTalk", talk: talk.title});
                 }
             }, "Delete")),
-        elt("div", null, "by ",
-            elt("strong", null, talk.presenter)),
+            elt("div", null, "by ",
+                elt("strong", null, talk.presenter))),
         elt("p", null, talk.summary),
         ...talk.comments.map(renderComment),
         elt("form", {

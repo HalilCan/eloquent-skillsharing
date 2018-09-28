@@ -31,10 +31,14 @@ h1 {
 }
 
 .talkTitle {
-    border-bottom: 1px solid #323232;
     display: flex;
     flex-direction: row;
     height: auto;
+}
+
+.talkHeader {
+    border-bottom: 1px solid #323232;
+    padding-bottom: 5px;
 }
 
 .talkTitle h2 {
