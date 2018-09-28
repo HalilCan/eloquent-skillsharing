@@ -144,7 +144,9 @@ function reportError(error) {
 }
 
 function renderUserField(name, dispatch) {
-    return elt("label", {}, "Your name: ", elt("input", {
+    return elt("label", {
+        class: "name-field"
+    }, "Your name: ", elt("input", {
         type: "text",
         value: name,
         onchange(event) {
@@ -183,17 +185,17 @@ function renderTalk(talk, dispatch, typedComment) {
         elt("p", null, talk.summary),
         ...talk.comments.map(renderComment),
         elt("form", {
-            onsubmit(event) {
-                event.preventDefault();
-                let form = event.target;
-                dispatch({
-                    type: "newComment",
-                    talk: talk.title,
-                    message: form.elements.comment.value
-                });
-                form.reset();
-            }
-        }, elt("input", {
+                onsubmit(event) {
+                    event.preventDefault();
+                    let form = event.target;
+                    dispatch({
+                        type: "newComment",
+                        talk: talk.title,
+                        message: form.elements.comment.value
+                    });
+                    form.reset();
+                }
+            }, elt("input", {
                 type: "text", name: "comment", value: typedComment, onkeyup: ((event) => {
                     let form = event.target;
                     dispatch({
