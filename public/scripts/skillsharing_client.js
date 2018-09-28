@@ -224,7 +224,8 @@ function renderTalkForm(dispatch) {
                     summary: summary.value
                 });
                 event.target.reset();
-            }
+            },
+            className: "talk-form"
         }, elt("h3", null, "Submit a Talk"),
         elt("label", null, "Title: ", title),
         elt("label", null, "Summary: ", summary),
