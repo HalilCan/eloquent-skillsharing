@@ -17,7 +17,7 @@ class Router {
 
         for (let {method, url, handler} of this.routes) {
             let match = url.exec(path);
-            if (!match || request.method != method) continue;
+            if (!match || request.method !== method) continue;
             let urlParts = match.slice(1).map(decodeURIComponent);
             return handler(context, ...urlParts, request);
         }
