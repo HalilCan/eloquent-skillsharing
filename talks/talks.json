@@ -1,1 +1,69 @@
-{"Woodworking workshop":{"title":"Woodworking workshop","presenter":"Daedalus","summary":"We'll start with wings.","comments":[{"author":"Icarus","message":"Hey dad, can we do something else?"},{"author":"Daedalus","message":"No."}]},"Wooing":{"title":"Wooing","presenter":"Zeus","summary":"Learn from the master.","comments":[{"author":"Anon","message":"Are you the golden dude"},{"author":"Hercules","message":"Delete this"},{"author":"Zeus","message":"No."}]},"How to stay alive after winning a war":{"title":"How to stay alive after winning a war","presenter":"Agamennon","summary":"An experimental course","comments":[]},"How to pick clothes as an emperor":{"title":"How to pick clothes as an emperor","presenter":"Trijanus","summary":"","comments":[{"author":"Trijanus","message":"Very nice."},{"author":"Severus","message":"I concur, cousin."},{"author":"Severus","message":"You should see the Aquiline Heights, cousin. They are a sight to die for."},{"author":"Nero","message":"Ah, they were."},{"author":"Trijanus","message":"Get your pipe and get out, pleb!"}]}}
+{
+  "Woodworking workshop": {
+    "title": "Woodworking workshop",
+    "presenter": "Daedalus",
+    "summary": "We'll start with wings.",
+    "comments": [
+      {
+        "author": "Icarus",
+        "message": "Hey dad, can we do something else?"
+      },
+      {
+        "author": "Daedalus",
+        "message": "No."
+      }
+    ]
+  },
+  "Wooing": {
+    "title": "Wooing",
+    "presenter": "Zeus",
+    "summary": "Learn from the master.",
+    "comments": [
+      {
+        "author": "Anon",
+        "message": "Are you the golden dude"
+      },
+      {
+        "author": "Hercules",
+        "message": "Delete this"
+      },
+      {
+        "author": "Zeus",
+        "message": "No."
+      }
+    ]
+  },
+  "How to stay alive after winning a war": {
+    "title": "How to stay alive after winning a war",
+    "presenter": "Agamennon",
+    "summary": "An experimental course",
+    "comments": []
+  },
+  "How to pick clothes as an emperor": {
+    "title": "How to pick clothes as an emperor",
+    "presenter": "Trijanus",
+    "summary": "",
+    "comments": [
+      {
+        "author": "Trijanus",
+        "message": "Very nice."
+      },
+      {
+        "author": "Severus",
+        "message": "I concur, cousin."
+      },
+      {
+        "author": "Severus",
+        "message": "You should see the Aquiline Heights, cousin. They are a sight to die for."
+      },
+      {
+        "author": "Nero",
+        "message": "Ah, they were."
+      },
+      {
+        "author": "Trijanus",
+        "message": "Get your pipe and get out, pleb!"
+      }
+    ]
+  }
+}
