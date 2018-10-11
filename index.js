@@ -106,7 +106,7 @@ SkillShareServer.prototype.waitForChanges = function (time) {
         this.waiting.push(resolve);
         setTimeout(() => {
             if (!this.waiting.includes(resolve)) return;
-            this.waiting = this.waiting.filter(r => r != resolve);
+            this.waiting = this.waiting.filter(r => r !== resolve);
             resolve({status: 304});
         }, time * 1000);
     });
@@ -172,8 +172,8 @@ router.add("PUT", talkPath,
         }
 
         if (!talk ||
-            typeof talk.presenter != "string" ||
-            typeof talk.summary != "string") {
+            typeof talk.presenter !== "string" ||
+            typeof talk.summary !== "string") {
             return {status: 400, body: "Bad talk data"};
         }
         server.talks[title] = {
@@ -202,8 +202,8 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
         }
 
         if (!comment ||
-            typeof comment.author != "string" ||
-            typeof comment.message != "string") {
+            typeof comment.author !== "string" ||
+            typeof comment.message !== "string") {
             return {status: 400, body: "Bad comment data"};
         } else if (title in server.talks) {
             server.talks[title].comments.push(comment);
@@ -217,7 +217,7 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
 router.add("GET", /^\/talks$/, async (server, request) => {
     let tag = /"(.*)"/.exec(request.headers["if-none-match"]);
     let wait = /\bwait=(\d+)/.exec(request.headers["prefer"]);
-    if (!tag || tag[1] != server.version) {
+    if (!tag || tag[1] !== server.version) {
         return server.talkResponse();
     } else if (!wait) {
         return {status: 304};
