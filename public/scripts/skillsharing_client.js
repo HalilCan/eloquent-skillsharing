@@ -170,6 +170,7 @@ function elt(type, props, ...children) {
 }
 
 function renderTalk(talk, dispatch, typedComment) {
+    return elt(
         "section", {className: "talk"},
         elt("section", {className: "talkHeader"}, elt("section", {className: "talkTitle"},
             elt("h2", null, talk.title, " "),
